@@ -51,9 +51,11 @@
       @display_identifier = result["identifier"].html_safe if result["identifier"]
       @display_identifier = result["digital_object_id"].html_safe if result["digital_object_id"]
       @display_identifier = result["authority_id"].html_safe if result["authority_id"]
-      if result["primary_type"] == "archival_object"
-        json = JSON.parse(result["json"])
-        @display_identifier = json["component_id"].html_safe if json["component_id"]
+      if result["jsonmodel_type"] == "archival_object"
+        record = JSON.parse(result["json"])
+        record["instances"].reject! { |instance| instance["instance_type"] == "digital_object" }
+        collection = record.dig("instances", 0, "sub_container", "top_container", "_resolved", "collection", 0)
+        @display_identifier = collection["identifier"].html_safe unless collection.nil?
       end
     %>
       <tr class="<%= "deleted" if deleted %>">
