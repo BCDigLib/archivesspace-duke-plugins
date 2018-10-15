@@ -5,7 +5,7 @@ Add an identifier column to search and advanced search results pages in the staf
 
 - Agents (authority id if defined)
 - Accessions
-- Archival Objects (component id if defined)
+- Archival Objects (resource id if defined in linked physical instance)
 - Digital Objects
 - Resources
 - Subjects (authority id if defined)
