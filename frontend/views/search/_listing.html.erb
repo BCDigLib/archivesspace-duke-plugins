@@ -57,7 +57,13 @@
         record = JSON.parse(result["json"])
         record["instances"].reject! { |instance| instance["instance_type"] == "digital_object" }
         collection = record.dig("instances", 0, "sub_container", "top_container", "_resolved", "collection", 0)
-        @display_identifier = collection["identifier"].html_safe unless collection.nil?
+        if collection.nil?
+          collection = record["ancestors"].select { |ancestor| ancestor["level"] = "collection" }
+          resource_resolved = JSONModel::HTTP.get_json(collection[0]["ref"])
+          @display_identifier = (resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"]).html_safe
+        else
+          @display_identifier = collection["identifier"].html_safe
+        end
       end
     %>
       <tr class="<%= "deleted" if deleted %>">
