@@ -46,25 +46,24 @@
     </tr>
     </thead>
     <tbody>
-    <% @search_data['results'].each do |result| 
-      deleted = (params.has_key?("deleted_uri") and Array(params["deleted_uri"]).include?(result["id"])) || false
-      # SET DISPLAY IDENTIFIER
-      @display_identifier = ""
-      @display_identifier = result["identifier"].html_safe if result["identifier"]
-      @display_identifier = result["digital_object_id"].html_safe if result["digital_object_id"]
-      @display_identifier = result["authority_id"].html_safe if result["authority_id"]
-      if result["jsonmodel_type"] == "archival_object"
-        record = JSON.parse(result["json"])
-        record["instances"].reject! { |instance| instance["instance_type"] == "digital_object" }
-        collection = record.dig("instances", 0, "sub_container", "top_container", "_resolved", "collection", 0)
-        if collection.nil?
-          resource_resolved = JSONModel::HTTP.get_json(record["resource"]["ref"])
-          @display_identifier = (resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"]).html_safe
-        else
-          @display_identifier = collection["identifier"].gsub(/--/, '-').html_safe
-        end
-      end
-    %>
+    <% @search_data['results'].each do |result| %> 
+      <% deleted = (params.has_key?("deleted_uri") and Array(params["deleted_uri"]).include?(result["id"])) || false %>
+      <!-- SET DISPLAY IDENTIFIER -->
+      <% @display_identifier = "" %>
+      <% @display_identifier = result["identifier"].html_safe if result["identifier"] %>
+      <% @display_identifier = result["digital_object_id"].html_safe if result["digital_object_id"] %>
+      <% @display_identifier = result["authority_id"].html_safe if result["authority_id"] %>
+      <% if result["jsonmodel_type"] == "archival_object" %>
+        <% record = JSON.parse(result["json"]) %>
+        <% record["instances"].reject! { |instance| instance["instance_type"] == "digital_object" } %>
+        <% collection = record.dig("instances", 0, "sub_container", "top_container", "_resolved", "collection", 0) %>
+        <% if collection.nil? %>
+          <% resource_resolved = JSONModel::HTTP.get_json(record["resource"]["ref"]) %>
+          <% @display_identifier = (resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"]).html_safe %>
+        <% else %>
+          <% @display_identifier = collection["identifier"].gsub(/--/, '-').html_safe %>
+        <% end %>
+      <% end %>
       <tr class="<%= "deleted" if deleted %>">
         <% if allow_multi_select? %>
           <td class="multiselect-column">
