@@ -59,9 +59,9 @@
         <% collection = record.dig("instances", 0, "sub_container", "top_container", "_resolved", "collection", 0) %>
         <% if collection.nil? %>
           <% resource_resolved = JSONModel::HTTP.get_json(record["resource"]["ref"]) %>
-          <% @display_identifier = (resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"]).html_safe %>
+          <% @display_identifier = resolve_readonly_link_to((resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"]).html_safe, resource_resolved["uri"]) %>
         <% else %>
-          <% @display_identifier = collection["identifier"].gsub(/--/, '-').html_safe %>
+          <% @display_identifier = resolve_readonly_link_to(collection["identifier"].gsub(/--/, '-').html_safe, collection["ref"]) %>
         <% end %>
       <% end %>
       <tr class="<%= "deleted" if deleted %>">
