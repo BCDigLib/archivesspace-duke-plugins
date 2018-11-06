@@ -9,10 +9,13 @@ The plugin displays values for:
 
 - Agents (authority id if defined)
 - Accessions
-- Archival Objects (parent resource id)
+- Archival Objects (link to parent resource id)
 - Digital Objects
 - Resources
 - Subjects (authority id if defined)
+
+Note that this plugin overwrites the context column introduced in v2.5.1 due to 
+performance issues that we identified with that feature.
 
 Usage
 -----
