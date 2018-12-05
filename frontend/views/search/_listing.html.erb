@@ -58,12 +58,8 @@
         <% record["instances"].reject! { |instance| instance["instance_type"] == "digital_object" } %>
         <% if record["resource"]["ref"] && record["resource"]["ref"].length > 0 %>
           <% resource_resolved = JSONModel::HTTP.get_json(record["resource"]["ref"]) %>
-          <% if resource_resolved["id_2"] %>
-            <% root_id = resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"] %>
-          <% else %>
-            <% root_id = resource_resolved["id_0"] + '-' + resource_resolved["id_1"] %>
-          <% end %>
-          <% @display_identifier = resolve_readonly_link_to(root_id).html_safe, resource_resolved["uri"] %>
+          <% resource_resolved["id_2"] ? root_id = resource_resolved["id_0"] + '-' + resource_resolved["id_1"] + '-' + resource_resolved["id_2"] : root_id = resource_resolved["id_0"] + '-' + resource_resolved["id_1"] %>
+          <% @display_identifier = resolve_readonly_link_to(root_id.html_safe, resource_resolved["uri"]) %>
         <% else %>
           <% collection = record.dig("instances", 0, "sub_container", "top_container", "_resolved", "collection", 0) %>
           <% @display_identifier = resolve_readonly_link_to(collection["identifier"].gsub(/--/, '-').html_safe, collection["ref"]) %>
